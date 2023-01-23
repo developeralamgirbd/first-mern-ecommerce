@@ -7,13 +7,13 @@ exports.create = async (req, res) => {
         const { name } = req.body;
         // if category name is empty after trim
         if (!name.trim()) {
-            return res.json({ error: "Name is required" });
+            return res.status(400).json({ error: "Category Name is required" });
         }
         // check category is exits
         const existingCategory = await Category.findOne({ name });
         // if category exits
         if (existingCategory) {
-            return res.json({ error: "Category Already exists" });
+            return res.status(400).json({ error: "Category Already exists" });
         }
 
         // create a new category with seo base url
@@ -31,18 +31,26 @@ exports.update = async (req, res) => {
         // destructure category name from body and get category id from url params
         const { name } = req.body;
         const { categoryId } = req.params;
+
+       /* // check category is exits
+        const existingCategory = await Category.findOne({ name });
+        // if category exits
+        if (existingCategory) {
+            return res.status(400).json({ error: "Category Already exists" });
+        }*/
+
         // find by category id and update
         const category = await Category.findByIdAndUpdate(
             categoryId,
             {
-                name,
-                slug: slugify(name),
-            },
-            { new: true }
+                    name,
+                    slug: slugify(name),
+                },
+            { new: true, runValidators: true }
         );
-        res.status(201).json(category);
+        res.status(200).json(category);
     } catch (err) {
-        console.log(err);
+        console.log(err.message);
         return res.status(400).json(err.message);
     }
 };
@@ -54,7 +62,7 @@ exports.remove = async (req, res) => {
         res.status(200).json(removed);
     } catch (err) {
         console.log(err);
-        return res.status(400).json(err.message);
+        return res.status(500).json(err.message);
     }
 };
 

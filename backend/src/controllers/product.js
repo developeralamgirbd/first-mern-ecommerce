@@ -1,9 +1,9 @@
-const Product = require("../models/product.js");
+const Product = require('../models/Product');
 const fs = require("fs");
 const slugify = require("slugify");
 const braintree = require("braintree");
 require("dotenv").config();
-const Order = require("../models/order.js");
+const Order = require("../models/Order");
 const sgMail = require("@sendgrid/mail");
 
 sgMail.setApiKey(process.env.SENDGRID_KEY);
@@ -27,29 +27,29 @@ exports.create = async (req, res) => {
         // validation
         switch (true) {
             case !name.trim():
-                return res.json({ error: "Name is required" });
+                return res.status(400).json({ error: "Name is required" });
             case !description.trim():
-                return res.json({ error: "Description is required" });
+                return res.status(400).json({ error: "Description is required" });
             case !price.trim():
-                return res.json({ error: "Price is required" });
+                return res.status(400).json({ error: "Price is required" });
             case !category.trim():
-                return res.json({ error: "Category is required" });
+                return res.status(400).json({ error: "Category is required" });
             case !quantity.trim():
-                return res.json({ error: "Quantity is required" });
+                return res.status(400).json({ error: "Quantity is required" });
             case !shipping.trim():
-                return res.json({ error: "Shipping is required" });
+                return res.status(400).json({ error: "Shipping is required" });
             case photo && photo.size > 1000000:
-                return res.json({ error: "Image should be less than 1mb in size" });
+                return res.status(400).json({ error: "Image should be less than 1mb in size" });
         }
 
         // create product
         const product = new Product({ ...req.fields, slug: slugify(name) });
 
         if (photo) {
-            console.log(fs.readFileSync(photo.path));
-            console.log(photo.type)
-            /*product.photo.data = fs.readFileSync(photo.path);
-            product.photo.contentType = photo.type;*/
+            /*console.log(fs.readFileSync(photo.path));
+            console.log(photo.type)*/
+            product.photo.data = fs.readFileSync(photo.path);
+            product.photo.contentType = photo.type;
         }
 
         await product.save();
@@ -139,19 +139,19 @@ exports.update = async (req, res) => {
         // validation
         switch (true) {
             case !name.trim():
-               return res.json({ error: "Name is required" });
+               return res.status(400).json({ error: "Name is required" });
             case !description.trim():
-               return res.json({ error: "Description is required" });
+               return res.status(400).json({ error: "Description is required" });
             case !price.trim():
-               return res.json({ error: "Price is required" });
+               return res.status(400).json({ error: "Price is required" });
             case !category.trim():
-               return res.json({ error: "Category is required" });
+               return res.status(400).json({ error: "Category is required" });
             case !quantity.trim():
-               return res.json({ error: "Quantity is required" });
+               return res.status(400).json({ error: "Quantity is required" });
             case !shipping.trim():
-               return res.json({ error: "Shipping is required" });
+               return res.status(400).json({ error: "Shipping is required" });
             case photo && photo.size > 1000000:
-               return res.json({ error: "Image should be less than 1mb in size" });
+               return res.status(400).json({ error: "Image should be less than 1mb in size" });
         }
 
         // update product
@@ -161,7 +161,7 @@ exports.update = async (req, res) => {
                 ...req.fields,
                 slug: slugify(name),
             },
-            { new: true }
+            { new: true, runValidators: true }
         );
 
         if (photo) {

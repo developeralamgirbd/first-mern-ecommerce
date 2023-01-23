@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import Loading from "./Loading";
 import axios from "axios";
-const PrivateRoute=()=> {
+import Login from "../../pages/auth/Login";
+
+const RedirectRoute= ()=> {
     // context
     const [auth] = useAuth();
     // state
     const [ok, setOk] = useState(false);
 
+    const authorizeBaseUserDashboardUrl = auth?.user?.role === 1 ? 'admin' : 'user';
+    // console.log(auth)
+
     useEffect(() => {
+
         const authCheck = async () => {
             const { data } = await axios.get(`/auth-check`);
             if (data.ok) {
@@ -19,12 +25,14 @@ const PrivateRoute=()=> {
             }
         };
 
-        if (auth?.token) authCheck();
+        if (auth?.token) {
+            authCheck().catch();
+        }
+
     }, [auth?.token]);
 
-
-    return ok ? <Outlet /> : <Loading />;
+    return ok ? <Loading path={'dashboard/'+authorizeBaseUserDashboardUrl}/> : <Outlet/> ;
 
 }
 
-export default PrivateRoute;
+export default RedirectRoute;

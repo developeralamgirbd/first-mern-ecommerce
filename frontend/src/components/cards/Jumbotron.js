@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Jambotron = () => {
+const Jumbotron = ({title, subTitle = 'Welcome to our shop'}) => {
     return (
         <div
             className="container-fluid jumbotron"
@@ -10,11 +10,10 @@ const Jambotron = () => {
                 <div className="col text-center p-5">
                     <h1 className="fw-bold">{title}</h1>
                     <p className="lead">{subTitle}</p>
-
                 </div>
             </div>
         </div>
     );
 };
 
-export default Jambotron;
+export default Jumbotron;
