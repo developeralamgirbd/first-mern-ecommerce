@@ -3,7 +3,7 @@ import Jumbotron from "../components/cards/Jumbotron";
 import axios from "axios";
 import ProductCard from "../components/cards/ProductCard";
 import { Checkbox, Radio } from "antd";
-// import { prices } from "../prices";
+import { prices } from "../prices";
 import useCategories from "../hooks/useCategories";
 
 const ShopPage = ()=> {
@@ -37,12 +37,13 @@ const ShopPage = ()=> {
     const loadFilterProducts = async ()=>{
         try {
             const {data} = await axios.post('/filtered-products', {
-                checked: checked
+                checked: checked,
+                radio: radio
             });
             setProducts(data);
 
         }catch (e) {
-            console.log(e)
+            console.log(e.response.data.error);
         }
     }
 
@@ -79,21 +80,36 @@ const ShopPage = ()=> {
         loadMore().catch()
     }, [page])
 
-    useEffect(()=>{
-        if (!checked.length){
-            loadProducts();
 
-        }else if (checked.length) {
-            setPage(1);
-            loadFilterProducts()
+    /*useEffect(()=> {
+        if (radio.length === 0 && checked.length === 0) {
+            loadProducts();
+            console.log('any')
         }
-    }, [checked])
+    }, [radio, checked]);*/
+
+    useEffect(()=> {
+        if (!checked.length && !radio.length) {
+            loadProducts();
+        }
+    }, [radio, checked]);
+
+
+    useEffect(()=>{
+        if (checked.length || radio.length) {
+            setPage(1);
+            loadFilterProducts().catch()
+        }
+    }, [checked, radio])
 
 
     useEffect(()=>{
         getTotal().catch();
     }, [])
 
+    // console.log(!checked.length )
+    console.log('radio=>',radio.length )
+    console.log('page =>',page);
 
     return (
         <>
@@ -123,13 +139,13 @@ const ShopPage = ()=> {
                         </h2>
 
                         <div className="row p-5">
-                           {/* <Radio.Group onChange={(e) => setRadio(e.target.value)}>
+                            <Radio.Group onChange={(e) => setRadio(e.target.value)}>
                                 {prices?.map((p) => (
                                     <div key={p._id} style={{ marginLeft: "8px" }}>
                                         <Radio value={p.array}>{p.name}</Radio>
                                     </div>
                                 ))}
-                            </Radio.Group>*/}
+                            </Radio.Group>
                         </div>
 
                         <div className="p-5 pt-0">
@@ -158,7 +174,7 @@ const ShopPage = ()=> {
                             ))}
 
                             <div className="container text-center p-5">
-                                {products && !checked.length && products.length < total && (
+                                {products && !checked.length && !radio.length && products.length < total && (
                                     <button
                                         className="btn btn-warning btn-lg col-md-6"
                                         disabled={loading}
