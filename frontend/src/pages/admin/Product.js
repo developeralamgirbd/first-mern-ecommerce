@@ -6,12 +6,14 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import {useNavigate} from "react-router-dom";
+import useCategories from "../../hooks/useCategories";
 const {Option} = Select;
 
 const AdminProduct=()=> {
     // context
     const [auth] = useAuth();
-    const [categories, setCategories] = useState([]);
+    const categories = useCategories();
+
     const [photo, setPhoto] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -22,19 +24,6 @@ const AdminProduct=()=> {
 
     const navigate = useNavigate();
 
-    const loadCategories = async ()=>{
-        try {
-            const {data} = await axios.get('/categories');
-            setCategories(data)
-        }catch (e) {
-            console.log(e.response.data)
-        }
-
-    }
-
-    useEffect(()=> {
-        loadCategories().catch(e => console.log(e));
-    }, [])
 
 
     const handleSubmit = async (e)=>{

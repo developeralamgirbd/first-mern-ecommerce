@@ -6,16 +6,18 @@ import Jumbotron from "../../components/cards/Jumbotron";
 import axios from "axios";
 import {useNavigate, useParams} from "react-router-dom";
 import toast from "react-hot-toast";
+import useCategories from "../../hooks/useCategories";
 const {Option} = Select;
 
 const ProductUpdate = () => {
     const [auth] = useAuth();
+    const categories = useCategories();
+
     const [photo, setPhoto] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('');
-    const [categories, setCategories] = useState([]);
     const [shipping, setShipping] = useState('');
     const [quantity, setQuantity] = useState('');
     const [id, setId] = useState('');
@@ -39,18 +41,9 @@ const ProductUpdate = () => {
 
     }
 
-    const loadCategories = async () => {
-        try {
-            const {data} = await axios.get('/categories');
-            setCategories(data);
-        }catch (e){
-            console.log(e)
-        }
-    }
 
     useEffect(()=> {
         loadProduct().catch(e => console.log(e));
-        loadCategories().catch(e => console.log(e));
     }, [])
 
 

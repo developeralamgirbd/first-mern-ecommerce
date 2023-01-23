@@ -16,6 +16,9 @@ import Secret from "./pages/Secret";
 import RedirectRoute from "./components/routs/RedirectRoute";
 import Products from "./pages/admin/Products";
 import ProductUpdate from "./pages/admin/ProductUpdate";
+import OrdersManage from "./pages/admin/OrdersManage";
+import SearchPage from "./pages/SearchPage";
+import ShopPage from "./pages/ShopPage";
 
 const PageNotFound = () => {
     return (
@@ -40,6 +43,8 @@ function App() {
 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/shop" element={<ShopPage />} />
 
             <Route path="/dashboard" element={<PrivateRoute />}>
                 <Route path="user" element={<Dashboard />} />
@@ -55,6 +60,7 @@ function App() {
                 <Route path="admin/product/update/:slug" element={<ProductUpdate />} />
                 <Route path="admin/product" element={<AdminProduct />} />
                 <Route path="admin/products" element={<Products />} />
+                <Route path="admin/orders" element={<OrdersManage />} />
 
             </Route>
 

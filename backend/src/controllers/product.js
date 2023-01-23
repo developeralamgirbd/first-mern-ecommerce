@@ -186,7 +186,7 @@ exports.filteredProducts = async (req, res) => {
 
         let args = {};
         if (checked.length > 0) args.category = checked;
-        if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
+        if (radio?.length) args.price = { $gte: radio[0], $lte: radio[1] };
         console.log("args => ", args);
 
         const products = await Product.find(args);
@@ -217,7 +217,7 @@ exports.productsCount = async (req, res) => {
 exports.listProducts = async (req, res) => {
     try {
         const perPage = 6;
-        const page = req.params.page ? req.params.page : 1;
+        const page = req.params?.page ? req.params?.page : 1;
 
         const products = await Product.find({})
             .select("-photo")
@@ -371,6 +371,7 @@ exports.orderStatus = async (req, res) => {
     try {
         const { orderId } = req.params;
         const { status } = req.body;
+
         const order = await Order.findByIdAndUpdate(
             orderId,
             { status },
@@ -396,6 +397,7 @@ exports.orderStatus = async (req, res) => {
         }
 
         res.status(200).json(order);
+
     } catch (err) {
         console.log(err);
         res.status(500).json({error: err.message});

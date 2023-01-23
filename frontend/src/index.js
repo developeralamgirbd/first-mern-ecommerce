@@ -7,12 +7,19 @@ import 'antd/dist/reset.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {AuthProvider} from "./context/auth";
+import {CartProvider} from "./context/cart";
+import {SearchProvider} from "./context/search";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
       <AuthProvider>
-        <App />
+          <SearchProvider>
+              <CartProvider>
+                  <App />
+              </CartProvider>
+          </SearchProvider>
+
       </AuthProvider>
   </React.StrictMode>
 );
