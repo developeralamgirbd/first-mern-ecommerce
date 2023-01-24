@@ -41,6 +41,9 @@ const productSchema = new Schema({
             data: Buffer,
             contentType: String,
         },
+        demoPhoto: {
+            type: String
+        },
         shipping: {
             required: false,
             type: Boolean,

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/cart";
 
-const ProductCard = ({ p }) => {
+const ProductCard = ({ p, photo }) => {
     // context
     const [cart, setCart] = useCart();
     // hooks
@@ -21,10 +21,10 @@ const ProductCard = ({ p }) => {
                     placement="start"
                     color="green"
                 >
+                    {/*? photo : `${process.env.REACT_APP_API_BASE_URL}/product/photo/${p._id}*/}
                     <img
-                        crossOrigin='anonymous'
                         className="card-img-top"
-                        src={`${process.env.REACT_APP_API_BASE_URL}/product/photo/${p._id}`}
+                        src={ photo}
                         alt={p.name}
                         style={{ height: "300px", objectFit: "cover" }}
                     />

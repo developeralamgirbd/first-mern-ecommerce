@@ -3,13 +3,16 @@ import { useSearch } from "../../context/search";
 import { useNavigate } from "react-router-dom";
 
 const Search = () => {
-    const [values, setValues] = useSearch();
+
+    const { setProducts, keyword, setKeyword, setTotal } = useSearch();
     const navigate = useNavigate();
+
     const handleSubmit = async (e)=> {
         e.preventDefault();
         try {
-            const {data} = await axios.get('/products/search/'+values?.keyword);
-            setValues({...values, results: data});
+            const {data} = await axios.get('/products/search/'+keyword+'/'+1);
+            setProducts(data.results);
+            setTotal(data.total);
             navigate('/search');
         }catch (e) {
             console.log(e)
@@ -22,8 +25,11 @@ const Search = () => {
                 style={{ borderRadius: "0px" }}
                 className="form-control"
                 placeholder="Search"
-                onChange={(e) => setValues({ ...values, keyword: e.target.value })}
-                value={values.keyword}
+                name='search'
+                onChange={(e) => {
+                     setKeyword(e.target.value);
+                 }}
+                value={keyword}
             />
             <button
                 className="btn btn-outline-primary"

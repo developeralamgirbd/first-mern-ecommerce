@@ -15,6 +15,7 @@ router.post("/register", register);
 router.post("/login", login);
 router.put("/profile", authVerify, updateProfile);
 
+
 // Auth check route
 router.get('/auth-check', authVerify, (_req, res)=>{
     res.status(200).json({ok: true});
@@ -28,5 +29,6 @@ router.get('/admin-check', authVerify, isAdmin, (_req, res)=>{
 // orders
 router.get("/orders", authVerify, getOrders);
 router.get("/all-orders", authVerify, isAdmin, allOrders);
+
 
 module.exports = router;

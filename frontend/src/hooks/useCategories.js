@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 
+
 const useCategories = () => {
 const [categories, setCategories] = useState([]);
     const loadCategories = async ()=>{

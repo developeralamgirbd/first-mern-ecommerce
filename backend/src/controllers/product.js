@@ -63,7 +63,7 @@ exports.create = async (req, res) => {
 /**
  * get all product
 */
-exports.list = async (req, res) => {
+exports.list = async (_req, res) => {
     try {
         const products = await Product.find({})
             .populate("category")
@@ -101,8 +101,9 @@ exports.photo = async (req, res) => {
             "photo"
         );
         // set photo content type in header content type
-        if (product.photo.data) {
+        if (product?.photo.data) {
             res.set("Content-Type", product.photo.contentType);
+            res.set("Cross-Origin-Resource-Policy",'cross-origin');
             return res.send(product.photo.data);
         }
     } catch (err) {
@@ -182,6 +183,7 @@ exports.update = async (req, res) => {
  */
 exports.filteredProducts = async (req, res) => {
     try {
+
         const { checked, radio } = req.body;
 
         let args = {};
@@ -189,10 +191,18 @@ exports.filteredProducts = async (req, res) => {
         if (radio?.length) args.price = { $gte: radio[0], $lte: radio[1] };
 
         console.log("args => ", args);
+        const total = await Product.find(args);
+        // const products = await Product.find(args);
+        const products = await Product.find(args)
+            .select("-photo")
+            .limit(6)
+            .sort({ createdAt: -1 });
 
-        const products = await Product.find(args);
         console.log("filtered products query => ", products.length);
-        res.status(200).json(products);
+
+        res.status(200).json({
+            products, total: total.length
+        });
     } catch (err) {
         console.log(err);
         res.status(500).json({error: err.message});
@@ -238,15 +248,35 @@ exports.listProducts = async (req, res) => {
  */
 exports.productsSearch = async (req, res) => {
     try {
+        const perPage = 6;
+        const page = req.params?.page ? req.params?.page : 1;
         const { keyword } = req.params;
+
+
+         const total = await Product.find({
+                  $or: [
+                      { name: { $regex: keyword, $options: "i" } },
+                      { description: { $regex: keyword, $options: "i" } },
+                  ],
+              });
+
         const results = await Product.find({
             $or: [
                 { name: { $regex: keyword, $options: "i" } },
                 { description: { $regex: keyword, $options: "i" } },
             ],
-        }).select("-photo");
+        }).select("-photo")
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+            .sort({ createdAt: -1 });
 
-        res.json(results);
+        // console.log(results);
+
+        res.status(200).json({
+            results,
+            total: total.length,
+        })
+
     } catch (err) {
         console.log(err);
         res.status(500).json({error: err.message});

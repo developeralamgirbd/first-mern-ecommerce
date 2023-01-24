@@ -40,7 +40,8 @@ const ShopPage = ()=> {
                 checked: checked,
                 radio: radio
             });
-            setProducts(data);
+            setProducts(data.products);
+            setTotal(data.total);
 
         }catch (e) {
             console.log(e.response.data.error);
@@ -63,7 +64,6 @@ const ShopPage = ()=> {
 
     const handleCheck = (value, id)=>{
         let all = [...checked];
-        // console.log('id: '+id, 'value: '+value );
 
         if (value){
             all.push(id);
@@ -79,14 +79,6 @@ const ShopPage = ()=> {
         if (page === 1) return;
         loadMore().catch()
     }, [page])
-
-
-    /*useEffect(()=> {
-        if (radio.length === 0 && checked.length === 0) {
-            loadProducts();
-            console.log('any')
-        }
-    }, [radio, checked]);*/
 
     useEffect(()=> {
         if (!checked.length && !radio.length) {
@@ -107,9 +99,6 @@ const ShopPage = ()=> {
         getTotal().catch();
     }, [])
 
-    // console.log(!checked.length )
-    console.log('radio=>',radio.length )
-    console.log('page =>',page);
 
     return (
         <>
@@ -140,8 +129,8 @@ const ShopPage = ()=> {
 
                         <div className="row p-5">
                             <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-                                {prices?.map((p) => (
-                                    <div key={p._id} style={{ marginLeft: "8px" }}>
+                                {prices?.map((p, i) => (
+                                    <div key={i} style={{ marginLeft: "8px" }}>
                                         <Radio value={p.array}>{p.name}</Radio>
                                     </div>
                                 ))}
@@ -160,21 +149,21 @@ const ShopPage = ()=> {
 
                     <div className="col-md-9">
                         <h2 className="p-3 mt-2 mb-2 h4 bg-light text-center">
-                            {products?.length} Products
+                            {checked.length > 0 || radio.length > 0 ? total : products?.length} Products
                         </h2>
 
                         <div
                             className="row"
                             style={{ height: "100vh", overflow: "scroll" }}
                         >
-                            {products?.map((p) => (
-                                <div className="col-md-4" key={p._id}>
-                                    <ProductCard p={p} />
+                            {products?.map((p, i) => (
+                                <div className="col-md-4" key={i}>
+                                    <ProductCard p={p} photo={p.demoPhoto} />
                                 </div>
                             ))}
 
                             <div className="container text-center p-5">
-                                {products && !checked.length && !radio.length && products.length < total && (
+                                {products && products.length < total && (
                                     <button
                                         className="btn btn-warning btn-lg col-md-6"
                                         disabled={loading}

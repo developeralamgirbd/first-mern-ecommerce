@@ -51,7 +51,6 @@ const Products=()=> {
                                         <div className="row g-0">
                                             <div className="col-md-4">
                                                 <img
-                                                    crossOrigin="anonymous"
                                                     src={`${process.env.REACT_APP_API_BASE_URL}/product/photo/${p._id}`}
                                                     alt={p.name}
                                                     className="img img-fluid rounded-start"

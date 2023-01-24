@@ -30,7 +30,7 @@ router.put("/product/:productId", authVerify, isAdmin, formidable(), update);
 router.post("/filtered-products", filteredProducts);
 router.get("/products-count", productsCount);
 router.get("/list-products/:page", listProducts);
-router.get("/products/search/:keyword", productsSearch);
+router.get("/products/search/:keyword/:page", productsSearch);
 router.get("/related-products/:productId/:categoryId", relatedProducts);
 
 router.get("/braintree/token", getToken);

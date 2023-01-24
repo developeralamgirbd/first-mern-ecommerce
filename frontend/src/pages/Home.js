@@ -11,8 +11,11 @@ const Home = () => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
 
+
+
     const loadProducts = async ()=> {
         try {
+
             const {data} = await axios.get('/list-products/'+page);
             setProducts(data);
         }catch (e) {
@@ -23,7 +26,6 @@ const Home = () => {
     const getTotal = async ()=> {
         try {
             const {data} = await axios.get('/products-count');
-            // console.log(data);
             setTotal(data);
         }catch (e) {
             console.log(e)
@@ -40,6 +42,7 @@ const Home = () => {
         }catch (e) {
             console.log(e);
         }
+
     }
 
     useEffect(()=> {
@@ -52,6 +55,7 @@ const Home = () => {
         loadProducts().catch(e => console.log(e));
         getTotal().catch(e => console.log(e));
     }, [])
+
 
     const arr = [...products];
     const sortedBySold = arr?.sort((a, b) => a.sold < b.sold ? 1 : -1);
@@ -68,7 +72,7 @@ const Home = () => {
                         <div className="row">
                             {products?.map((p) => (
                                 <div className="col-md-6" key={p._id}>
-                                    <ProductCard p={p} />
+                                    <ProductCard p={p} photo={p.demoPhoto} />
                                 </div>
                             ))}
                         </div>
@@ -81,7 +85,7 @@ const Home = () => {
                         <div className="row">
                             {sortedBySold?.map((p) => (
                                 <div className="col-md-6" key={p._id}>
-                                    <ProductCard p={p} />
+                                    <ProductCard p={p} photo={p.demoPhoto}/>
                                 </div>
                             ))}
                         </div>
@@ -93,8 +97,8 @@ const Home = () => {
                         <button
                             className="btn btn-warning btn-lg col-md-6"
                             disabled={loading}
-                            onClick={(e) => {
-                                e.preventDefault();
+                            onClick={event => {
+                                event.preventDefault();
                                 setPage(page + 1);
                             }}
                         >
@@ -102,6 +106,8 @@ const Home = () => {
                         </button>
                     )}
                 </div>
+
+
             </div>
         </>
     );
