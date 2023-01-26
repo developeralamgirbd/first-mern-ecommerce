@@ -13,12 +13,15 @@ import AdminProduct from "./pages/admin/Product";
 import PrivateRoute from "./components/routs/PrivateRoute";
 import AdminRoute from "./components/routs/AdminRoute";
 import Secret from "./pages/Secret";
-import RedirectRoute from "./components/routs/RedirectRoute";
 import Products from "./pages/admin/Products";
 import ProductUpdate from "./pages/admin/ProductUpdate";
 import OrdersManage from "./pages/admin/OrdersManage";
 import SearchPage from "./pages/SearchPage";
 import ShopPage from "./pages/ShopPage";
+import CategoriesList from "./pages/CategoriesList";
+import ProductsByCategory from "./pages/ProductsByCategory";
+import ProductView from "./pages/ProductView";
+import Cart from "./pages/Cart";
 
 const PageNotFound = () => {
     return (
@@ -45,6 +48,10 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/shop" element={<ShopPage />} />
+            <Route path="/categories" element={<CategoriesList />} />
+            <Route path="/category/:slug" element={<ProductsByCategory />} />
+            <Route path="/product/:slug" element={<ProductView />} />
+            <Route path="/cart" element={<Cart />} />
 
             <Route path="/dashboard" element={<PrivateRoute />}>
                 <Route path="user" element={<Dashboard />} />
